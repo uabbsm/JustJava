@@ -1,6 +1,8 @@
 package com.example.justjava;
 
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -8,6 +10,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.CheckBox;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -33,15 +36,28 @@ public class MainActivity extends AppCompatActivity {
      */
     public void submitOrder(View view) {
 
+        EditText namefield = (EditText) findViewById(R.id.name_field);
+        String name = namefield.getText().toString();
+
         CheckBox whippedCreamCheckbox = findViewById(R.id.whipped_cream_checkbox);
         boolean hasWhippedCreamCheckbox = whippedCreamCheckbox.isChecked();
 
         CheckBox chocolateCheckBox = findViewById(R.id.chocolate_checkbox);
         boolean hasChocolateCheckBox = chocolateCheckBox.isChecked();
 
-        int price = calculatePrice(quantity);
-        String priceMessage = createOrderSummary(price, hasWhippedCreamCheckbox, hasChocolateCheckBox);
-        displayMessage(priceMessage);
+        int price = calculatePrice(quantity, hasWhippedCreamCheckbox, hasChocolateCheckBox);
+        String priceMessage = createOrderSummary(name, price, hasWhippedCreamCheckbox, hasChocolateCheckBox);
+
+
+        Intent intent = new Intent(Intent.ACTION_SENDTO);
+        intent.setData(Uri.parse("mailto: "));
+        intent.putExtra(Intent.EXTRA_SUBJECT, "Just Java order for " + name);
+        intent.putExtra(Intent.EXTRA_TEXT, priceMessage);
+
+        if(intent.resolveActivity(getPackageManager()) != null){
+            startActivity(intent);
+        }
+
     }
 
     /**
@@ -49,28 +65,32 @@ public class MainActivity extends AppCompatActivity {
      *
      * @return the price
      */
-    private int calculatePrice(int quantity) {
-        int price = quantity * 5;
-        return price;
+    private int calculatePrice(int quantity, boolean addWhippedCream, boolean addChocolate) {
+        int basePrice = 5;
+
+        if (addWhippedCream) {
+
+            basePrice = basePrice + 1;
+        }
+
+        if (addChocolate) {
+
+            basePrice = basePrice + 2;
+        }
+        return this.quantity * basePrice;
     }
 
-    private String createOrderSummary(int price, boolean addWhippedCream, boolean addChocolate) {
-        String priceMessage = "Name: Bruno Marquez";
-        priceMessage += "\nAdd whipped cream? " + addWhippedCream;
-        priceMessage += "\nAdd Chocolate? " + addChocolate;
-        priceMessage += "\nQuantity: " + quantity;
-        priceMessage += "\nTotal: $" + price;
-        priceMessage += "\nThank You!";
+    private String createOrderSummary(String name, int price, boolean addWhippedCream, boolean addChocolate) {
+
+        String priceMessage = getString(R.string.Name) + " " + name;
+        priceMessage += "\n" + getString(R.string.addwhippedcream) + " " + addWhippedCream;
+        priceMessage += "\n" + getString(R.string.addChocolate) + " " + addChocolate;
+        priceMessage += "\n" + getString(R.string.quant) + " "  + quantity;
+        priceMessage += "\n" + getString(R.string.total)  + " " + price;
+        priceMessage += "\n" + getString(R.string.thankYou);
         return priceMessage;
     }
 
-    /**
-     * This method displays the given text on the screen.
-     */
-    private void displayMessage(String priceMessage) {
-        TextView orderSummaryTextView = (TextView) findViewById(R.id.order_summary_text_view);
-        orderSummaryTextView.setText(priceMessage);
-    }
 
     public void increment(View view) {
         quantity = quantity + 1;

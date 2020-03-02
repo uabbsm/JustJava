@@ -1,19 +1,28 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
 
-    <LinearLayout xmlns:app="http://schemas.android.com/apk/res-auto"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
         android:padding="16dp">
 
+        <EditText
+            android:id="@+id/name_field"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/hint"
+            android:inputType="textCapWords" />
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/sixteenMarginTop"
             android:text="@string/toppings"
             android:textAllCaps="true" />
 
@@ -73,27 +82,14 @@
 
         </LinearLayout>
 
-        <TextView
 
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:paddingTop="16dp"
-            android:text="@string/orderSummary"
-            android:textAllCaps="true" />
-
-        <TextView
-            android:id="@+id/order_summary_text_view"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="16dp"
-            android:textColor="@android:color/black"
-            android:textSize="22sp" />
 
         <Button
             android:id="@+id/button_id"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:onClick="submitOrder"
+            android:layout_marginTop="@dimen/sixteenMarginTop"
             android:text="@string/order" />
 
     </LinearLayout>
